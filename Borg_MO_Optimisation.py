@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
     # Run the optimization with BorgMOEA
     algorithm = BorgMOEA(problem, epsilons=0.001)
-    algorithm.run(10000)
+    algorithm.run(1000)
 
     # Timing summary
     end_time = time.time()

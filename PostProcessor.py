@@ -131,7 +131,17 @@ def MO_postplot(F_opt, X_opt, global_parameters, Q, turbine_characteristics):
     turbine_type = [turbine_type_map.get(t, "Unknown") for t in typet]
 
     # Map conf to turbine configuration name
-    turbine_config_map = {1: "single", 2: "dual", 3: "triple"}
+    turbine_config_map = {
+    1: "single",
+    2: "dual",
+    3: "triple",
+    4: "4x",
+    5: "5x",
+    6: "6x",
+    7: "7x",
+    8: "8x",
+    9: "9x",
+    10: "10x"}
     turbine_config = [turbine_config_map.get(c, f"{c}th") for c in conf]
 
     # Create a dictionary for the table
