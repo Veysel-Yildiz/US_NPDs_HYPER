@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
     # Run the optimization with BorgMOEA
     algorithm = BorgMOEA(problem, epsilons=0.001)
-    algorithm.run(1000)
+    algorithm.run(10000)
 
     # Timing summary
     end_time = time.time()
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 # List of variables to keep
     keep_vars = {'optimization_table', 'best_table'}
 
-# Delete all other user-defined global variables
-    for var in list(globals()):
-       if var not in keep_vars and not var.startswith("__"):
-           del globals()[var]
+# # Delete all other user-defined global variables
+#     for var in list(globals()):
+#        if var not in keep_vars and not var.startswith("__"):
+#            del globals()[var]

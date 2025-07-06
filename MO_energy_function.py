@@ -185,6 +185,10 @@ def MO_Sim_energy (Q, typet, conf, X, global_parameters, turbine_characteristics
     
     penalty = 19999990
     
+    # Unpack the parameter values
+    # D = X[0]  # Diameter
+    # ed = e / D  # Relative roughness
+    
     # Choose turbine characteristics
     kmin, var_name_cavitation, func_Eff = turbine_characteristics[typet]
     
@@ -197,6 +201,11 @@ def MO_Sim_energy (Q, typet, conf, X, global_parameters, turbine_characteristics
         V_d = 3
         D = ( 4 * Q_design / (np.pi * V_d) )**0.5     
  
+        # Re_d = V_d * D / 1e-6  # Kinematic viscosity ν = 1,002 · 10−6 m2∕s
+        
+        # # Find the friction factor [-] for design head
+        # f_d = moody(ed, np.array([Re_d]))
+
         # Calculate head losses for design head
         hf_d = 0.1* hg # 10% of gross head 
         design_h = hg - hf_d  # Design head
@@ -214,7 +223,9 @@ def MO_Sim_energy (Q, typet, conf, X, global_parameters, turbine_characteristics
         n = np.interp(q / Q_design, perc, func_Eff)  # Interpolate values from func_Eff based on qt/Q_design ratio
         idx = q < kmin * Q_design  # Set qt and nrc to zero where qt is less than kmin * Q_design
         n[idx] = 0
- 
+        # V = 4 * q / (np.pi * D**2)  # Flow velocity in the pipe
+        # Re = V * D / 1e-6  # Reynolds number
+        # f = moody(ed, Re)  # Friction factor
         hnet = hg - 0.1* hg  # Head loss due to friction
         
         DailyPower = hnet * q * 9.81 * n * 0.98  # Power
@@ -237,7 +248,10 @@ def MO_Sim_energy (Q, typet, conf, X, global_parameters, turbine_characteristics
         V_d = 3  # Flow velocity for design head
         D = ( 4 * Q_design / (np.pi * V_d) )**0.5  
         
-
+ 
+        # Re_d = V_d * D / 1e-6  # Reynolds number for design head
+        # f_d = moody(ed, np.array([Re_d]))  # Friction factor for design head
+        # hf_d = f_d * (L / D) * V_d**2 / (2 * 9.81) * 1.1  # Head losses for design head
         design_h = hg - 0.1*hg  # Design head
         design_ic = design_h * 9.81 * Q_design  # Installed capacity
 
@@ -264,9 +278,9 @@ def MO_Sim_energy (Q, typet, conf, X, global_parameters, turbine_characteristics
 
     AAE = np.mean(DailyPower) * hr / 1e6  # Gwh Calculate average annual energy
     
-    Cost = Cost_OakRidge(design_ic, design_h, Q_design)
+    Cost = Cost_OakRidge(design_ic, design_h, Q_design)  
     
-    Cost = Cost*( 1 + (maxturbine-1)/100)
+    Cost = Cost*( 1 + (maxturbine-1)/1000)
     
     cost_OP = Cost * om  # Operation and maintenance cost
 

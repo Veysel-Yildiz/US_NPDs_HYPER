@@ -99,6 +99,9 @@ def MO_postplot(F_opt, X_opt, global_parameters, Q, turbine_characteristics):
     for i in range(n):
        NPV[i], BC[i], AAE[i], Cost[i] = MO_Sim_energy(Q,  typet[i], conf[i], design_discharges[i, :],  global_parameters,  turbine_characteristics)
     
+    
+
+       
     # Plot Pareto front
     MO_scatterplot2(mo_NPV, mo_BC, NPV, BC)
     
@@ -197,25 +200,25 @@ def MO_scatterplot(F1, F2):
 
 def MO_scatterplot2(F1, F2, F3, F4):
     
-    fig, axs = plt.subplots(1, 2, figsize=(14, 6), gridspec_kw={'wspace': 0.4})
-    # First subplot
-    axs[0].scatter( F1,  F2, color='blue')
-    axs[0].set_xlabel("NPV (Million USD)", fontsize=24)
-    axs[0].set_ylabel("BC (-)", fontsize=24)
-    axs[0].set_title("Optimization Results", fontsize=22)
-    axs[0].tick_params(axis='both', which='major', labelsize=18, width=2)
+   fig, axs = plt.subplots(1, 2, figsize=(14, 6), gridspec_kw={'wspace': 0.4}) 
 
-    # Second subplot
-    axs[1].scatter( F3, F4, color='green')
-    axs[1].set_xlabel("NPV (Million USD)", fontsize=24)
-    axs[1].set_ylabel("BC (-)", fontsize=24)
-    axs[1].set_title("Optimization Results + NPD design", fontsize=22)
-    axs[1].tick_params(axis='both', which='major', labelsize=18, width=2)
-   
-    # Add horizontal space between subplots
-    #plt.subplots_adjust(wspace=0.6)  
-    #plt.tight_layout()
-    plt.show()
+# First subplot
+   axs[0].scatter(F1, F2, color='blue', label='Optimization Results')
+   axs[0].set_xlabel("NPV (Million USD)", fontsize=24)
+   axs[0].set_ylabel("BC (-)", fontsize=24)
+   axs[0].set_title("Optimization Results", fontsize=22)
+   axs[0].tick_params(axis='both', which='major', labelsize=18, width=2)
+
+   # Second subplot
+   axs[1].scatter(F3[:-1], F4[:-1], color='blue', label='Optimization Results')  # all except last
+   axs[1].scatter(F3[-1], F4[-1], color='red', label='NPD Design')  # last point
+   axs[1].set_xlabel("NPV (Million USD)", fontsize=24)
+   axs[1].set_ylabel("BC (-)", fontsize=24)
+   axs[1].set_title("Optimization Results + NPD design", fontsize=22)
+   axs[1].tick_params(axis='both', which='major', labelsize=18, width=2)
+   axs[1].legend(fontsize=16)
+
+   plt.show()
 
 
 def create_table(optimization_table, filename="optimization_results.txt"):
